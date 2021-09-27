@@ -66,6 +66,21 @@ class LinkedList:
                 return
             current_index += 1
 
+    # def insert(self, index, data):
+    #     current_index = 0
+    #     new_node = Node(data)
+    #     current = self.head
+    #     while current.next is not None:
+    #         if current_index == index - 1:
+    #             temp = current.next
+    #             current.next = new_node
+    #             new_node.next = temp
+    #             self.size += 1
+    #             return
+    #         current = current.next
+    #         current_index += 1
+    #     raise Exception(f'Index {index} out of bound')
+
     def remove(self, index):
         if index >= self.size:
             raise Exception(f'Index {index} out of bound')
