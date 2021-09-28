@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 
-class Node: 
+class Node:
     def __init__(self, data=None):
         self.data = data  # Assign data
         self.next = None  # Initialize with next empty pointer
@@ -16,7 +16,8 @@ class Node:
 
 class LinkedList:
     def __init__(self, data=None):  # Data can be None type as well to create empty list
-        self.tail = self.head = Node(data)  # Tail is used in a few functions for faster result
+        # Tail is used in a few functions for faster result
+        self.tail = self.head = Node(data)
         self.size = 1
 
     def __str__(self):
@@ -51,35 +52,19 @@ class LinkedList:
         return current
 
     def insert(self, index, data):
-        pointer = []
         current_index = 0
         new_node = Node(data)
         current = self.head
         while current.next is not None:
-            last = current
-            current = current.next
-            if current_index == index:
-                pointer = last.next
-                last.next = new_node
-                new_node.next = pointer
+            if current_index == index - 1:
+                temp = current.next
+                current.next = new_node
+                new_node.next = temp
                 self.size += 1
                 return
+            current = current.next
             current_index += 1
-
-    # def insert(self, index, data):
-    #     current_index = 0
-    #     new_node = Node(data)
-    #     current = self.head
-    #     while current.next is not None:
-    #         if current_index == index - 1:
-    #             temp = current.next
-    #             current.next = new_node
-    #             new_node.next = temp
-    #             self.size += 1
-    #             return
-    #         current = current.next
-    #         current_index += 1
-    #     raise Exception(f'Index {index} out of bound')
+        raise Exception(f'Index {index} out of bound')
 
     def remove(self, index):
         if index >= self.size:
