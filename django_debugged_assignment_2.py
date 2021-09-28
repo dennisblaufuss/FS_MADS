@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 
-class Node: 
+class Node:
     def __init__(self, data=None):
         self.data = data  # Assign data
         self.next = None  # Initialize with next empty pointer
@@ -16,7 +16,8 @@ class Node:
 
 class LinkedList:
     def __init__(self, data=None):  # Data can be None type as well to create empty list
-        self.tail = self.head = Node(data)  # Tail is used in a few functions for faster result
+        # Tail is used in a few functions for faster result
+        self.tail = self.head = Node(data)
         self.size = 1
 
     def __str__(self):
@@ -117,6 +118,7 @@ class LinkedList:
 
 # time complexity LARS
 
+
 i = 10
 count = []
 time = []
@@ -144,13 +146,13 @@ df = pd.DataFrame(data)
 
 # plot
 # Dimension and Style of the Chart
-plt.figure(figsize=(16,5))
+plt.figure(figsize=(16, 5))
 plt.style.use("ggplot")
 
 plt.plot(df["Count"], df["Time_Span"],
-        marker = "o",
-        color = "red",
-        label = "Time Span")
+         marker="o",
+         color="red",
+         label="Time Span")
 
 # Labeling and aligning the axes to 0
 plt.xlabel("Amount of elements inserted")
@@ -162,18 +164,20 @@ plt.show()
 
 # time complexity SOPHIE
 
-# Creating a LL 
+# Creating a LL
 
-def createlist(n): # nicht als funktion wenn wir das net brauchen
+
+def createlist(n):  # nicht als funktion wenn wir das net brauchen
     LL = LinkedList(0)
     i = 1
     while i <= n:
         LL.add(i)
-        i +=1
-    #print(LL)
+        i += 1
+    # print(LL)
     return LL
 
 # Creating a df for input (includes count of elements, LL, and space for TC)
+
 
 LL_count = []
 LL_list = []
@@ -196,18 +200,20 @@ df = pd.DataFrame(data, index=list(range(0, n)))
 
 #df_simulated = df
 
+
 def insert_df(input_df, e):
     i = 0
     n = len(input_df.index)
     while i < n:
         time_start = perf_counter_ns()
         for pos in range(e):
-            input_df["List"][i].insert(1,42) #@Dennis:
-            #can you refactor the code so we cann insert from position 0 onwards?
+            input_df["List"][i].insert(1, 42)  # @Dennis:
+            # can you refactor the code so we cann insert from position 0 onwards?
         time_span = perf_counter_ns() - time_start
-        input_df["Time_Span"][i] = time_span/1000000000 #time in sec
+        input_df["Time_Span"][i] = time_span/1000000000  # time in sec
         i += 1
-        
+
+
 insert_df(df, 500000)
 
 # Line Plot
@@ -216,18 +222,44 @@ df_plot = pd.DataFrame(df)
 
 # plot
 # Dimension and Style of the Chart
-plt.figure(figsize = (16,5))
+plt.figure(figsize=(16, 5))
 plt.style.use("ggplot")
 
 plt.plot(df_plot["Count"], df_plot["Time_Span"],
-        marker = "o",
-        color = "red",
-        label = "Time Span")
+         marker="o",
+         color="red",
+         label="Time Span")
 
 # Labeling and aligning the axes to 0
 plt.xlabel("Amount of elements inserted")
-plt.xlim(xmin = 0)
+plt.xlim(xmin=0)
 plt.ylabel("Time Span in Seconds")
-plt.ylim(ymin = 0, ymax = 2)
+plt.ylim(ymin=0, ymax=2)
 plt.title("Calculate time complexity to insert elements into a linked list")
 plt.show()
+
+
+# Time Complexity PHILIPP
+
+i = 10
+count = []
+time = []
+data = []
+while i <= 100000:
+    count.insert(0, i)
+    test = LinkedList()
+
+    for j in (range(i)):
+        test.add(j)
+
+    time_start = perf_counter_ns()
+    for k in range(100):
+        test.at(randrange(i))
+
+    time_end = perf_counter_ns()
+    time_span = time_end - time_start
+    time_in_sec_10000 = time_span / 1000000000
+    time.append(time_in_sec_10000)
+    data = {"Count": count, "Time_Span": time}
+    print(f"i: {i} takes {time_in_sec_10000} Seconds")
+    i = 10*i
