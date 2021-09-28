@@ -241,25 +241,34 @@ plt.show()
 
 # Time Complexity PHILIPP
 
-i = 10
-count = []
-time = []
-data = []
-while i <= 100000:
-    count.insert(0, i)
-    test = LinkedList()
+i = 100000  # <--- creation of the linked list
+n = 200000  # <--- quantity to insert
+l = 10000000  # <--- max linked list length
+reps = 100  # <--- number of times the at gets repeated to get an average time
+while i <= l:
+    new_lst = LinkedList()
 
     for j in (range(i)):
-        test.add(j)
+        new_lst.add(j)
 
-    time_start = perf_counter_ns()
-    for k in range(100):
-        test.at(randrange(i))
+    time_start1 = perf_counter_ns()
+    for k in range(reps):
+        new_lst.at(randrange(i))
+    time_end1 = perf_counter_ns()
+    time_span1 = time_end1 - time_start1
+    time_in_sec_1 = (time_span1 / 1000000000) / reps
+    print(
+        f"To access a random element in a linked list of size {i} it takes on avg. {time_in_sec_1} Seconds")
 
-    time_end = perf_counter_ns()
-    time_span = time_end - time_start
-    time_in_sec_10000 = time_span / 1000000000
-    time.append(time_in_sec_10000)
-    data = {"Count": count, "Time_Span": time}
-    print(f"i: {i} takes {time_in_sec_10000} Seconds")
     i = 10*i
+
+    time_start2 = perf_counter_ns()
+    for j in range(n):
+        new_lst.insert(1, j)
+        j += 1
+
+    time_end2 = perf_counter_ns()
+    time_span2 = time_end2 - time_start2
+    time_in_sec_2 = time_span2 / 1000000000
+    print(
+        f"To insert {n} elements in a set of {i} elements it takes {time_in_sec_2} Seconds")
