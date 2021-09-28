@@ -33,7 +33,7 @@ class LinkedList:
         self.size += 1
         return
 
-        # Version for classic linekd list (=without tail):
+        # Version for classic linked list (=without tail):
         new_node = Node(data)
         current = self.head
         while current.next is not None:
