@@ -55,6 +55,14 @@ class LinkedList:
         current_index = 0
         new_node = Node(data)
         current = self.head
+        if index == 0:
+            new_node.next = self.head
+            self.head = new_node
+            self.size += 1
+            return
+        if index == self.size:
+            self.add(data)
+            return
         while current.next is not None:
             if current_index == index - 1:
                 temp = current.next
@@ -114,3 +122,17 @@ class LinkedList:
             return "no clue wie dat geht"
         else:
             return self.at(slicer)
+
+
+LL = LinkedList("0")
+
+i = 1
+while i < 10:
+    LL.add(str(i))
+    i += 1
+
+LL.insert(0, "new Head")
+
+LL.insert(len(LL), "new Node")
+
+print(LL)
