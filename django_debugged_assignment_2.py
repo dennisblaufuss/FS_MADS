@@ -244,7 +244,7 @@ plt.show()
 i = 100000  # <--- creation of the linked list
 n = 200000  # <--- quantity to insert
 l = 10000000  # <--- max linked list length
-reps = 100  # <--- number of times the at gets repeated to get an average time
+reps = 50  # <--- number of times the 'at' gets repeated to get an average time
 while i <= l:
     new_lst = LinkedList()
 
@@ -260,8 +260,6 @@ while i <= l:
     print(
         f"To access a random element in a linked list of size {i} it takes on avg. {time_in_sec_1} Seconds")
 
-    i = 10*i
-
     time_start2 = perf_counter_ns()
     for j in range(n):
         new_lst.insert(1, j)
@@ -272,3 +270,5 @@ while i <= l:
     time_in_sec_2 = time_span2 / 1000000000
     print(
         f"To insert {n} elements in a set of {i} elements it takes {time_in_sec_2} Seconds")
+
+    i = 10*i
