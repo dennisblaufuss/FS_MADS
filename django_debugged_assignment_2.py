@@ -241,10 +241,16 @@ plt.show()
 
 # Time Complexity PHILIPP
 
-i = 100000  # <--- creation of the linked list
-n = 200000  # <--- quantity to insert
-l = 10000000  # <--- max linked list length
+
+i = 10000  # <--- creation of the linked list
+n = 20000  # <--- quantity to insert
+l = 1000000  # <--- max linked list length
 reps = 50  # <--- number of times the 'at' gets repeated to get an average time
+
+data_count = []
+data_time1 = []
+data_time2 = []
+
 while i <= l:
     new_lst = LinkedList()
 
@@ -260,6 +266,9 @@ while i <= l:
     print(
         f"To access a random element in a linked list of size {i} it takes on avg. {time_in_sec_1} Seconds")
 
+    data_count.append(i)
+    data_time1.append(time_in_sec_1)
+
     time_start2 = perf_counter_ns()
     for j in range(n):
         new_lst.insert(1, j)
@@ -271,4 +280,13 @@ while i <= l:
     print(
         f"To insert {n} elements in a set of {i} elements it takes {time_in_sec_2} Seconds")
 
+    data_time2.append(time_in_sec_2)
+
     i = 10*i
+
+data = {"count": data_count,
+        "time (access)": data_time1, "time (insert)": data_time2}
+
+df = pd.DataFrame(data)
+
+print(df)
