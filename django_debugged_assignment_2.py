@@ -116,6 +116,8 @@ class LinkedList:
         else:
             return self.at(slicer)
 
+
+"""
 # time complexity SOPHIE
 
 # Creating a LL
@@ -174,31 +176,15 @@ insert_df(df, 500000)
 
 df_plot = pd.DataFrame(df)
 
-# plot
-# Dimension and Style of the Chart
-plt.figure(figsize=(16, 5))
-plt.style.use("ggplot")
 
-plt.plot(df_plot["Count"], df_plot["Time_Span"],
-         marker="o",
-         color="red",
-         label="Time Span")
-
-# Labeling and aligning the axes to 0
-plt.xlabel("Amount of elements inserted")
-plt.xlim(xmin=0)
-plt.ylabel("Time Span in Seconds")
-plt.ylim(ymin=0, ymax=2)
-plt.title("Calculate time complexity to insert elements into a linked list")
-plt.show()
-
+"""
 
 # Time Complexity PHILIPP
 
 
-i = 10000  # <--- creation of the linked list
-n = 20000  # <--- quantity to insert
-l = 1000000  # <--- max linked list length
+i = 100000  # <--- creation of the linked list
+n = 200000  # <--- quantity to insert
+l = 10000000  # <--- max linked list length
 reps = 50  # <--- number of times the 'at' gets repeated to get an average time
 
 data_count = []
@@ -236,11 +222,33 @@ while i <= l:
 
     data_time2.append(time_in_sec_2)
 
-    i = 10*i
+    i *= 2
 
 data = {"count": data_count,
         "time (access)": data_time1, "time (insert)": data_time2}
 
 df = pd.DataFrame(data)
 
-print(df)
+
+# plot
+# Dimension and Style of the Chart
+plt.figure(figsize=(16, 5))
+plt.style.use("ggplot")
+
+plt.plot(df["count"], df["time (access)"],
+         marker="o",
+         color="red",
+         label="Time Span")
+
+plt.plot(df["count"], df["time (insert)"],
+         marker="o",
+         color="blue",
+         label="Time Span")
+
+# Labeling and aligning the axes to 0
+plt.xlabel("Amount of elements inserted")
+plt.xlim(xmin=0)
+plt.ylabel("Time Span in Seconds")
+plt.ylim(ymin=0, ymax=2)
+plt.title("Calculate time complexity to insert elements into a linked list")
+plt.show()
