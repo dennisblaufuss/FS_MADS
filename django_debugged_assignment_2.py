@@ -117,71 +117,6 @@ class LinkedList:
             return self.at(slicer)
 
 
-"""
-# time complexity SOPHIE
-
-# Creating a LL
-
-
-def createlist(n):  # nicht als funktion wenn wir das net brauchen
-    LL = LinkedList(0)
-    i = 1
-    while i <= n:
-        LL.add(i)
-        i += 1
-    # print(LL)
-    return LL
-
-# Creating a df for input (includes count of elements, LL, and space for TC)
-
-
-LL_count = []
-LL_list = []
-
-i = 5e3
-j = 0
-n = 10
-
-while j < n:
-    count = i
-    LL_count.append(count)
-    LL_list.append(createlist(count))
-    i *= 2
-    j += 1
-
-data = {"Count": LL_count, "List": LL_list,
-        "Time_Span": list(range(0, n))}
-
-df = pd.DataFrame(data, index=list(range(0, n)))
-
-#df_simulated = df
-
-
-def insert_df(input_df, e):
-    i = 0
-    n = len(input_df.index)
-    while i < n:
-        time_start = perf_counter_ns()
-        for pos in range(e):
-            input_df["List"][i].insert(1, 42)  # @Dennis:
-            # can you refactor the code so we cann insert from position 0 onwards?
-        time_span = perf_counter_ns() - time_start
-        input_df["Time_Span"][i] = time_span/1000000000  # time in sec
-        i += 1
-
-
-insert_df(df, 500000)
-
-# Line Plot
-
-df_plot = pd.DataFrame(df)
-
-
-"""
-
-# Time Complexity PHILIPP
-
-
 i = 100000  # <--- creation of the linked list
 n = 200000  # <--- quantity to insert
 l = 10000000  # <--- max linked list length
@@ -246,7 +181,7 @@ plt.plot(df["count"], df["time (insert)"],
          label="Time Span")
 
 # Labeling and aligning the axes to 0
-plt.xlabel("Amount of elements inserted")
+plt.xlabel("Length of Linked List")
 plt.xlim(xmin=0)
 plt.ylabel("Time Span in Seconds")
 plt.ylim(ymin=0, ymax=2)
