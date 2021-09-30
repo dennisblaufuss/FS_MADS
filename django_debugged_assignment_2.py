@@ -33,7 +33,7 @@ class LinkedList:
         self.size += 1
         return
 
-        # Version for classic linekd list (=without tail):
+        # Version for classic linked list (=without tail):
         new_node = Node(data)
         current = self.head
         while current.next is not None:
@@ -51,7 +51,6 @@ class LinkedList:
         return current
 
     def insert(self, index, data):
-        pointer = []
         current_index = 0
         new_node = Node(data)
         current = self.head
@@ -64,15 +63,15 @@ class LinkedList:
             self.add(data)
             return
         while current.next is not None:
-            last = current
-            current = current.next
-            if current_index == index:
-                pointer = last.next
-                last.next = new_node
-                new_node.next = pointer
+            if current_index == index - 1:
+                temp = current.next
+                current.next = new_node
+                new_node.next = temp
                 self.size += 1
                 return
+            current = current.next
             current_index += 1
+        raise Exception(f'Index {index} out of bound')
 
     def remove(self, index):
         if index >= self.size:
