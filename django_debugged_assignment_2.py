@@ -2,7 +2,6 @@ from time import perf_counter_ns
 from random import randrange
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 
 
 class Node:
@@ -110,80 +109,65 @@ class LinkedList:
         else:
             return "negative step is only possible in double linked list"
 
-    def __getitem__(self, slicer):
-        if isinstance(slicer, slice):
-            return "no clue wie dat geht"
-        else:
-            return self.at(slicer)
 
-
-i = 100000  # <--- creation of the linked list
-n = 200000  # <--- quantity to insert
-l = 10000000  # <--- max linked list length
-reps = 50  # <--- number of times the 'at' gets repeated to get an average time
+min_l = 10000  # <--- creation of the linked list
+n = 600000  # <--- quantity to insert
+max_l = 20000000  # <--- max linked list length
+reps = 10  # <--- number of times the 'at' gets repeated to get an average time
 
 data_count = []
 data_time1 = []
 data_time2 = []
 
-while i <= l:
+while min_l <= max_l:
     new_lst = LinkedList()
 
-    for j in (range(i)):
+    for j in (range(min_l)):
         new_lst.add(j)
 
     time_start1 = perf_counter_ns()
     for k in range(reps):
-        new_lst.at(randrange(i))
+        new_lst.at(randrange(min_l))
     time_end1 = perf_counter_ns()
     time_span1 = time_end1 - time_start1
-    time_in_sec_1 = (time_span1 / 1000000000) / reps
-    print(
-        f"To access a random element in a linked list of size {i} it takes on avg. {time_in_sec_1} Seconds")
-
-    data_count.append(i)
+    time_in_sec_1 = (time_span1 / 1000000000)
+    data_count.append(min_l)
     data_time1.append(time_in_sec_1)
 
     time_start2 = perf_counter_ns()
     for j in range(n):
         new_lst.insert(1, j)
         j += 1
-
     time_end2 = perf_counter_ns()
     time_span2 = time_end2 - time_start2
     time_in_sec_2 = time_span2 / 1000000000
-    print(
-        f"To insert {n} elements in a set of {i} elements it takes {time_in_sec_2} Seconds")
-
     data_time2.append(time_in_sec_2)
+    min_l *= 2
 
-    i *= 2
-
+# Dataframe
 data = {"count": data_count,
         "time (access)": data_time1, "time (insert)": data_time2}
-
 df = pd.DataFrame(data)
 
-
-# plot
-# Dimension and Style of the Chart
+# Plot
 plt.figure(figsize=(16, 5))
 plt.style.use("ggplot")
 
-plt.plot(df["count"], df["time (access)"],
+plt.plot(df["count"]/1000, df["time (access)"],
          marker="o",
          color="red",
-         label="Time Span")
+         label="time to access " + str(reps) + " random elements")
 
 plt.plot(df["count"], df["time (insert)"],
          marker="o",
          color="blue",
-         label="Time Span")
+         label="time to insert " + str(n) + " elements at position zero")
 
+plt.legend()
 # Labeling and aligning the axes to 0
-plt.xlabel("Length of Linked List")
+plt.xlabel("length of linked list in thousands")
 plt.xlim(xmin=0)
-plt.ylabel("Time Span in Seconds")
-plt.ylim(ymin=0, ymax=2)
-plt.title("Calculate time complexity to insert elements into a linked list")
+plt.ylabel("time span in seconds")
+plt.ylim(ymin=0)
+plt.title("Comparison between insert at index 0 and acces of random node in linked list")
 plt.show()
