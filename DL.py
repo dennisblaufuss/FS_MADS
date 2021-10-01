@@ -1,4 +1,3 @@
-#imports
 from time import perf_counter_ns
 from random import randrange
 
@@ -6,9 +5,9 @@ from random import randrange
 class DoublyNode:  # Style guide: convention how to write code - Capitalize first letter
     # Class is the blueprint
 
-    # Function to initialize the node object
+    # Function to initialize the node for double linked list
     def __init__(self, data=None, prev=None, next=None):  # always store "self"
-        self.data = data  # Assign data
+        self.data = data  # Assign data 
         self.next = next
         self.prev = prev
 
@@ -16,16 +15,16 @@ class DoublyNode:  # Style guide: convention how to write code - Capitalize firs
         return str(self.data)
 
 
-class DoublyLinkedList:  # Look up PEP 20 & PEP 8
+class DoublyLinkedList: 
 
-    # Function to initialize the Linked
-    # List object
-    def __init__(self, data=None):  # This will create the first element of the list
+    # Function to initialize the Double Linked List
+    # List objects
+    def __init__(self, data=None):  # This will create the first element of the Double Linked list
         self.head = DoublyNode(data)
         self.tail = self.head
         self.size = 1
 
-    def __str__(self):
+    def __str__(self):   
         data = ""
         current_node = self.head
         while current_node is not None:
@@ -40,13 +39,13 @@ class DoublyLinkedList:  # Look up PEP 20 & PEP 8
         self.tail = to_add_node
         self.size += 1
 
-    def at(self, index):
+    def at(self, index): # This will call the at-func for the Double Linked list
         if self.size / 2 >= index:
             return self.at_from_head(index)
         return self.at_from_tail(index)
     
         
-    def at_from_head(self, index):
+    def at_from_head(self, index): # This will count elements of the DL starting from the head of the list
         if index >= self.size:
             raise Exception(f'Index {index} out of bound')
         current = self.head
@@ -54,7 +53,7 @@ class DoublyLinkedList:  # Look up PEP 20 & PEP 8
             current = current.next
         return current
     
-    def at_from_tail(self, index):
+    def at_from_tail(self, index): # This will count elements of the DL starting from the tail of the list
         if index >= self.size:
             raise Exception(f'Index {index} out of bound')
         current = self.tail
@@ -64,10 +63,10 @@ class DoublyLinkedList:  # Look up PEP 20 & PEP 8
         return current
 
     def insert(self, index, data):
-        # 3 faelle:
-        # am anfang hinzufuegen index = 0
-        # am ende  hinzufuegen
-        # dazwischen
+        # 3 cases:
+        # insert node in the beginning if index == 0
+        # insert node in the end of the list
+        # insert node between elements of the list
         if index == 0:
             to_add_node = DoublyNode(data, None, self.head)
             self.head = to_add_node
@@ -84,10 +83,10 @@ class DoublyLinkedList:  # Look up PEP 20 & PEP 8
         
         
     def remove(self, index):
-        # 3 faelle:
-        # am anfang hinzufuegen index = 0
-        # am ende  hinzufuegen
-        # dazwischen
+        # 3 cases:
+        # removing node from the beginning of the list if index == 0
+        # removing node from the end of the list
+        # removing node between elements of the list
         if index == 0 and self.size == 1:
             self.head = None
             self.tail = None
@@ -106,7 +105,7 @@ class DoublyLinkedList:  # Look up PEP 20 & PEP 8
         self.size -= 1
         
     def __len__(self):
-        return self.size  # better precompute than recompute ;)
+        return self.size  
 
 
 # time complexity
