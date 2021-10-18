@@ -170,7 +170,7 @@ class Node:
                 return self.l_rotate(x, y, z)
             else:
                 self.right.balance()
-        
+
         elif self.balance_factor == -2:
             x = y = self
             if x.left.balance_factor == -2:
@@ -296,6 +296,7 @@ def create_binary_search_tree(in_l):
 
 
 # example left left without changing root
+print("example left left without changing root")
 tree = Node("Deniz", 22)
 tree.basic_insert("Bogdan", 27)
 tree.basic_insert("Aylin", 24)
@@ -314,6 +315,7 @@ tree.balanced_insert("Abdul", 29)
 tree.display()
 
 # example right right with changing root
+print("example right right with changing root")
 tree2 = Node("Deniz", 22)
 tree2.basic_insert("Bogdan", 27)
 tree2.basic_insert("Eren", 22)
