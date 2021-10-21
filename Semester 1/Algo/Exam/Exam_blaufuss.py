@@ -42,7 +42,7 @@ class Table:
             # doing this after kicking out irrelevant boxes and ending early (see if statement) prevents unnescesarry time
             box.append(box[0] + box[2])
 
-        sep_list = []
+        col_list = []
 
         for box in ocr_boxes:
             # it would save time to skip the comparing with itself
@@ -50,16 +50,24 @@ class Table:
             for compare_box in ocr_boxes:
                 if box[4] < compare_box[0]:
                     temp.append([box[4], compare_box[0]])
-            for sep in temp:
+            for col in temp:
                 for compare_box in ocr_boxes:
-                    if compare_box[0] >= sep[0] or compare_box[4] <= sep[1]:
-                        temp.remove(sep)
-            sep_list.append(temp)
-        
-        # check for double columns
-            
+                    if compare_box[0] >= col[0] or compare_box[4] <= col[1]:
+                        temp.remove(col)
+            col_list.append(temp)
 
-        # out put has to be within table and not page!!!!
+        # check for overlapping columns
+        for col in col_list:
+            for compare_col in col_list:
+                if compare_col[0] <= col[0] and compare_col[1] >= col[1] and compare_col[1] - compare_col[0] > col[1] - col[0]:
+                    col_list.remove(col)
+
+        sep_list = []
+        for col in col_list:
+            # has to be table coordinates and not global coordinates
+            temp_sep = col[0] + ((col[1] - col[0])//2)
+            sep = temp_sep - self.top_left_x
+            sep_list.append(sep)
         # YOUR CODE ENDS HERE
 
 
