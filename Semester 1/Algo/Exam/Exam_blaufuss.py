@@ -66,9 +66,13 @@ class Table:
             temp = []
             for compare_box in ocr_boxes:
                 # ERROR: IDK why but the code does not append to temp in here.
+                # if i check manually it does tho
+                # has to be some stupid error... fml
                 if box[4] < compare_box[0]:
                     temp.append([box[4], compare_box[0]])
             for col in temp:
+                # there should be a faster way of implementing -> checking directly for all boxes.
+                # thus we wouldn't have to overwrite stuff over and over again.
                 for compare_box in ocr_boxes:
                     if compare_box[0] > col[0] or compare_box[4] < col[1]:
                         temp.remove(col)
@@ -76,6 +80,7 @@ class Table:
 
         # check for overlapping columns
         for col in col_list:
+            # there should be a faster way here aswell
             for compare_col in col_list:
                 if compare_col[0] <= col[0] and compare_col[1] >= col[1] and compare_col[1] - compare_col[0] > col[1] - col[0]:
                     col_list.remove(col)
