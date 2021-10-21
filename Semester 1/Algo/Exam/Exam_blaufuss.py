@@ -29,6 +29,7 @@ class Table:
         # YOUR CODE STARTS HERE
         for box in ocr_boxes:
             # removes all boxes that are out of the table
+            # you would have to remove regarding y achsis as well -> had no time to implement
             if box[0] > (self.top_left_x + self.width) or box[1] < self.top_left_x:
                 ocr_boxes.remove(box)
 
@@ -44,6 +45,18 @@ class Table:
         sep_list = []
 
         for box in ocr_boxes:
+            # it would save time to skip the comparing with itself
+            temp = []
+            for compare_box in ocr_boxes:
+                if box[4] < compare_box[0]:
+                    temp.append([box[4], compare_box[0]])
+            for sep in temp:
+                for compare_box in ocr_boxes:
+                    if compare_box[0] >= sep[0] or compare_box[4] <= sep[1]:
+                        temp.remove(sep)
+            sep_list.append(temp)
+        
+        # check for double columns
             
 
         # out put has to be within table and not page!!!!
