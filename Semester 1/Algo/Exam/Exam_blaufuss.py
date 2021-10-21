@@ -1,8 +1,8 @@
 # Dennis Blaufuss
 # 8458109
 # 21.10.21
-
 # Option 2 - OCR boxes
+
 
 class Table:
 
@@ -17,7 +17,7 @@ class Table:
         self.width = width
         self.height = height
 
-    def calculate_columns(ocr_boxes):
+    def calculate_columns(self, ocr_boxes):
         # Returns a list of column separators relative to the top_left_x of the table without crossing OCR boxes.
         # Note that:
         # * OCR boxes are given as a list of lists (for example:  [[10, 10, 100, 5], [10, 20, 80, 5]])
@@ -27,7 +27,12 @@ class Table:
         # * the algorithm must not create column that is totally empty (i.e has not OCR box in it);
         # * the column separator should be (approximately) in the middle of the empty space between OCR boxes.
         # YOUR CODE STARTS HERE
-        ...
+        for box in ocr_boxes:
+            # removes all boxes that are out of the table
+            if box[0] > (self.top_left_x + self.width) or box[1] < self.top_left_x:
+                ocr_boxes.remove(box)
+
+        # out put has to be within table and not page!!!!
         # YOUR CODE ENDS HERE
 
 
