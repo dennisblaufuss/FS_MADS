@@ -3,6 +3,23 @@
 # 21.10.21
 # Option 2 - OCR boxes
 
+"""
+Plain English Explanition:
+The Function first checks if the boxes are within in table. (regarding x and y coordinates)
+All boxes that aren't are removed from the list.
+Now the function computes the end of each box (for easier use afterwards).
+After That all boxes are compared with each other and possible empty columns are looked for.
+Those possible columns are added to a list. Those are saved as starting_x and ending_x.
+Now for each possilbe column in the list it is checked if there is another box in that space.
+If yes the possible column is removed.
+Now one last check has to happen:
+There could be columns overlapping. Thus we have to check if there is for any column a biger one spaning the same space (and more obviously)
+If yes, this column is removed as well.
+Now we should (hopefully :P) have our complete list of columns.
+For each columns now the approximate mid has to be computed and added to the seperator list.
+This seperator list now gets returned.
+"""
+
 
 class Table:
 
@@ -48,11 +65,12 @@ class Table:
             # it would save time to skip the comparing with itself
             temp = []
             for compare_box in ocr_boxes:
+                # ERROR: IDK why but the code does not append to temp in here.
                 if box[4] < compare_box[0]:
                     temp.append([box[4], compare_box[0]])
             for col in temp:
                 for compare_box in ocr_boxes:
-                    if compare_box[0] >= col[0] or compare_box[4] <= col[1]:
+                    if compare_box[0] > col[0] or compare_box[4] < col[1]:
                         temp.remove(col)
             col_list.append(temp)
 
@@ -72,7 +90,8 @@ class Table:
 
 
 t1 = Table(10, 10, 410, 210)
-c1 = t1.calculate_columns([11, 11, 79, 29], [100, 11, 90, 29])
+# I change the input here to a list and not two -> hope thats fine
+c1 = t1.calculate_columns([[11, 11, 79, 29], [100, 11, 90, 29]])
 # c1 should be [95]
 
 t2 = Table(10, 10, 410, 210)
