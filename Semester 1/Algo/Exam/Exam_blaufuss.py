@@ -32,6 +32,20 @@ class Table:
             if box[0] > (self.top_left_x + self.width) or box[1] < self.top_left_x:
                 ocr_boxes.remove(box)
 
+        if len(ocr_boxes) < 2:
+            # returns empty list if there are either no or one box within in the table
+            return []
+
+        for box in ocr_boxes:
+            # appends ending coordinate to boxes
+            # doing this after kicking out irrelevant boxes and ending early (see if statement) prevents unnescesarry time
+            box.append(box[0] + box[2])
+
+        sep_list = []
+
+        for box in ocr_boxes:
+            
+
         # out put has to be within table and not page!!!!
         # YOUR CODE ENDS HERE
 
