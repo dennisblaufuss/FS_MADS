@@ -107,13 +107,13 @@ df = pd.DataFrame(data)
 
 # plot
 # Dimension and Style of the Chart
-plt.figure(figsize=(16,5))
+plt.figure(figsize=(16, 5))
 plt.style.use("ggplot")
 
 plt.plot(df["Count"], df["Time_Span"],
-        marker = "o",
-        color = "red",
-        label = "Time Span")
+         marker="o",
+         color="red",
+         label="Time Span")
 
 # Labeling and aligning the axes to 0
 plt.xlabel("Amount of elements inserted")
