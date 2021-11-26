@@ -1,0 +1,193 @@
+---
+title: "assignment_3_blaufuss"
+author: "Dennis Blaufuss"
+date: "11/24/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rethinking)
+```
+
+##### 1. Urban foxes are like street gangs. Groups vary from 2 to 8 individual foxes, and each group maintains its own (almost exclusive) urban territory. Some territories are larger than others. The data set foxes in the rethinking package consists of data for 116 foxes from 30 different urban groups in England. You can load and inspect the data in the usual way, namely by
+
+```{r}
+data(foxes)
+d <- foxes
+precis(d)
+```
+
+##### The variable area encodes that some territories are larger than others; the variable avgfood encodes that some territories have more average food than others. Suppose we want to model the weight of each fox. For the questions in this section, assume this causal DAG:
+
+![](/Users/dennisblaufuss/Desktop/DAG_assignment_3.png)
+
+##### Questions:
+
+###### a) Does territory size have a causal influence the weight of foxes? Construct a quap model to infer the total causal influence of area on weight. Does increasing the area available to each fox make it healthier (i.e., heavier)? I recommend that you standardize your variables and use prior predictive simulation to show that your model’s predictions stay within the possible outcome range.
+
+```{r}
+d$A <- standardize( d$area )
+d$V <- standardize( d$avgfood )
+d$G <- standardize( d$groupsize )
+d$W <- standardize( d$weight)
+
+m1a <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βA * A,
+    α ~ dnorm(0, 0.2),
+    βA ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+
+precis(m1a)
+```
+
+###### Note:
+
+Because there are no back-door paths from area to weight, no other variable has to be included (in order to close such a back-door).
+
+###### Answer:
+
+Territory size does not have a causal influence on weight (health) at all. At least not in this sample group of UK foxes.
+
+***
+
+###### b) Now infer the causal impact of adding food (avgfood) to a territory. Would this make foxes heavier? Which covariates do you need to adjust to estimate the total causal influence of food?
+
+```{r}
+m1b <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βV * V,
+    α ~ dnorm(0, 0.2),
+    βV ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+
+precis(m1b)
+```
+
+###### Note:
+
+Same Note as in 1A applys: No back-doors to be closed.
+
+###### Answer:
+
+Same as 1A there seems to be no causal impact of adding food onto the weight. Furthermore, since we want to have a look at the complete causal impact closing the indirect path "avgfood -> groupsize -> weight" would be wrong here. So a single predictor model is the choice.
+
+***
+
+###### c) Now infer the causal impact of group size (groupsize). Which covariates do you need to adjust to make this estimate? Inspect the posterior distribution of the resulting model. What do you think explains these data? Specifically, explain the estimates of the effects of area, avgfood, and groupsize on weight. How do they make sense together? (Hint: we covered an example in class which exhibited a similar relationship between predictors and outcome variable.)
+
+```{r}
+m1c <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βG * G + βV * V,
+    α ~ dnorm(0, 0.2),
+    βG ~ dnorm(0, 0.5),
+    βV ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+precis(m1c)
+```
+
+###### Note:
+
+Now, we in deed have a back-door to be closed: groupsize <- avgfood -> weight.
+
+###### Answer:
+
+Since we need to close mentioned backdoor, we now need two predictors: groupsize & avgfood. It looks like groupsize has a negative impact on the weight, controlling for avgfood. Similarly, avgfood has a positive one, controlling for groupsize. So the direct (and in this case as well total) causal influence of groupsize is to reduce weight. I would explain this by a bigger group size leads to less avarage food for each fox (One may argue as well that in smaller groups each fox has to be stronger and thus heavier). As stated the direct causal influence of avgfood is positive. But the total causal influence of avgfood is still somewhere around none. This is a masking effect: The direct and indirect causal effects somewhat nullify each other: More avgfood leads to more weight but more avgfood leads to bigger groupsize as well which then leads to less weight. I would say the causal explanation in this case is that more foxes move into a territory until the food available to each is no better than the food in a neighboring territory (or even territories). Every territory ends up equally in a seemingless process to be average. This is, furthermore, known in behavioral ecology as an ideal free distribution. To find application in the financial sector I think prices of equal (or pretty exchangeable) are changing in an similar matter where they all end up at average at some point.
+
+***
+
+##### 2. Explain the difference between model selection and model comparison. What information is lost under model selection?
+
+###### Answer:
+
+In model selection, we use information criteria to select one model, and pick the one that has the best information criteria value. In model averaging, mostly DIC or WAIC (or back in the days AIC) are used to make a posterior predictive distribution that combines all models. Model selection loses information about relative model accuracy contained in the differences among information criterion values; this is especially problematic when the selected model only outperforms its alternatives to a small degree.
+
+***
+
+##### 3. Use WAIC or LOO based model comparison on five different models, each using weight as the outcome, and containing the follow sets of predictor variables:
+##### (1) avgfood + groupsize + area
+##### (2) avgfood + groupsize
+##### (3) avgfood + area
+##### (4) avgfood
+##### (5) area
+##### Can you explain the relative differences in WAIC scores, using the fox DAG from above? Be sure to pay attention to the standard error of the score differences (dSE).
+
+```{r}
+# (1) avgfood + groupsize + area
+m31 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a + βV*V + βG*G + βA*A,
+    a ~ dnorm(0, 0.2),
+    c(βV, βG, βA) ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+# (2) avgfood + groupsize
+m32 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βV * V + βG * G,
+    α ~ dnorm(0, 0.2),
+    c(βV, βG) ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+# (3) groupsize + area
+m33 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βG * G + βA * A,
+    α ~ dnorm(0, 0.2),
+    c(βG, βA) ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+# (4) avgfood
+m34 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βV * V,
+    α ~ dnorm(0, 0.2),
+    βV ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+# (5) area
+m35 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- α + βA * A,
+    α ~ dnorm(0, 0.2),
+    βA ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data = d
+)
+
+compare(m31, m32, m33, m34, m35)
+```
+
+```{r, echo=FALSE}
+plot(compare(m31, m32, m33, m34, m35))
+```
+
+```{r}
+coeftab(m34, m35)
+```
+
+###### Answer:
+
+Firstly we note that the differences in WAIC scores all fall well within the 99% intervals. Looking at the comparison we can state that models m31, m32 and m33 are pretty similar while m34 and m35 show some similarities in their WAIC values as well. Let's first focus on the first three. Th differences are minor and a lot smaller than all of the SE's thus WAIC wise these models seem tied together. We can find explanation for that whilst looking at the DAG: Causality wise, as long as we have groupsize plus either avgfood, are or even both as our predictors we receive the same inferences. Another way to think of this is that the influence of good, adjusting for group size, is (according to the DAG) the same as the influence of area, adjusting for group size, because the influence of area is routed entirely through food and group size (there are no back-doors). Now, on the other hand m34 and m35 both don't include groupsize and as the causal impact of area on weights is indirect with avgfood as a variable in between we get a similar model which lead to a total causal impact being close to none (as already mentioned above). The posterior distributions shown above reflects this quite well.
