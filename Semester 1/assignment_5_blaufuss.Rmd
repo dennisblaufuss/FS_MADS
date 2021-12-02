@@ -1,0 +1,73 @@
+---
+title: "assignment_5_blaufuss"
+author: "Dennis Blaufuss"
+date: "12/10/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rethinking)
+library(dagitty)
+
+# Note: I knit to html and then save the html file to pdf to receive the submitted result. Thus this Markdown isn't optimized for knitting to pdf. I choose this workaround since I encountered a lot of weird issues with knitting the pdf in the first place (I guess M1 related as usual :D)
+```
+
+##### For this assignment, you will work with the Trolley dataset:
+
+```{r}
+data(Trolley)
+d <- Trolley
+precis(d)
+```
+
+##### The basis of the assignment are the models developed in sections 12.3-12.4 of the textbook. So, you should first implement that code before starting this problem set.
+
+```{r}
+
+```
+
+***
+
+##### 1. We see that education, modeled as an ordered category, is associated with moral judgments. Is this association causal? One possible confound is that education is also associated with age through a causal process: namely, people are older when they finish a level of education than when they begin it.
+##### Reconsider the Trolley data in light of this issue. Specifically,
+##### (a) Draw a DAG that represents hypothetical causal relationships among response, education, and age.
+##### (b) Identify which statistical model or models are required to evaluate the causal influence of education on responses. Hint: you should use the code in the book to reorder the education level labels:
+```{r}
+# R code 12.31
+edu_levels <- c( 6 , 1 , 8 , 4 , 7 , 2 , 5 , 3 )
+d$edu_new <- edu_levels[ d$edu ]
+```
+##### (c) What do you conclude about the causal relationships among these three variables?
+
+###### Answer:
+
+```{r}
+
+```
+
+***
+
+##### 2. Now consider one more variable in the Trolley data: Gender. Suppose that gender might influence education as well as response directly. Draw the DAG now that in- cludes response, education, age, and gender. Is it possible that any of the inferences from Question 1 are confounded by gender? If so, define any additional models you need to infer the causal influence of education on response. What do you conclude?
+
+###### Answer:
+
+```{r}
+
+```
+
+Text
+
+***
+
+##### 3. Rewrite the following model as a multilevel model.
+yi ∼ Binomial(1, pi) 
+logit(pi) = αgroup[i] +βxi
+αgroup ∼ Normal(0, 1.5) 
+β ∼ Normal(0, 0.5)
+
+###### Answer:
